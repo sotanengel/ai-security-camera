@@ -1,0 +1,21 @@
+id: uc_02
+name: ベランダ・庭監視
+location_description: ベランダ、庭、裏口。侵入者・動物・洗濯物の異常に関心がある。
+detector_classes:
+  - person
+  - cat
+  - dog
+  - bird
+vlm_system_prompt: |
+  屋外スペースの安全監視。存在しない事象を作らない。unknown を適切に使う。JSON のみ。
+vlm_user_prompt_template: |
+  場所: {location_description}
+  検知: {detector_summary}
+  ルール: {custom_rules}
+  JSONで状況を返してください。
+notification:
+  interest_classes:
+    - person
+  min_confidence: 0.45
+recording_retention_days: 7
+snapshot_retention_days: 30
