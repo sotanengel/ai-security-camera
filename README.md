@@ -11,9 +11,7 @@
 ## 開発環境
 
 ```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+bash scripts/dev-install.sh
 pytest
 ruff check src tests
 ```
@@ -33,6 +31,15 @@ ruff check src tests
   ```bash
   export UV_INDEX_URL="https://token:tg_YOUR_TOKEN@pypi.flatt.tech/simple/"
   ```
+
+- **プロジェクトでの利用（ローカル設定済み向け）**
+
+  ```bash
+  bash scripts/dev-install.sh
+  ```
+
+  `dev-install.sh` は `pip config` や `UV_INDEX_URL` の現在値を表示し、Guard 設定が有効か確認しながら `.venv` への依存導入を行います（トークン自体は保存しません）。
+  Guard 側で `401` が返る場合は、デフォルトで一度だけ public PyPI にフォールバックして導入を継続します。フォールバックを禁止したい場合は `GUARD_STRICT=1 bash scripts/dev-install.sh` を使ってください。
 
 - **CI（GitHub Actions）**  
   リポジトリの **Secrets** に `TAKUMI_GUARD_TOKEN` を登録すると、ワークフローが Guard 経由で `pip install` します。未設定の場合は **パブリック PyPI** でインストールします（フォークや外部コントリビュータ向け）。
