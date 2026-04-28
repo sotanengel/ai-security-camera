@@ -1,0 +1,46 @@
+services:
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    restart: unless-stopped
+    ports:
+      - "1984:1984"
+      - "8554:8554"
+    volumes:
+      - go2rtc_data:/config
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - ollama
+    ports:
+      - "8000:8000"
+    environment:
+      ASC_DATA_DIR: /data
+      ASC_OLLAMA_BASE_URL: http://ollama:11434
+      ASC_OLLAMA_MODEL: ${ASC_OLLAMA_MODEL:-llava}
+      ASC_API_TOKEN: ${ASC_API_TOKEN:-change-me}
+      ASC_NTFY_TOPIC_URL: ${ASC_NTFY_TOPIC_URL:-}
+    volumes:
+      - app_data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  go2rtc_data:
+  ollama_data:
+  app_data:
