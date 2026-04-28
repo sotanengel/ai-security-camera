@@ -1,0 +1,22 @@
+id: uc_01
+name: 玄関前監視
+location_description: 玄関ドア外または共用廊下。来訪者・配達・不審な滞留・置き配に関心がある。
+detector_classes:
+  - person
+  - car
+  - dog
+vlm_system_prompt: |
+  あなたは監視カメラの状況判定アシスタントです。不明な場合は event_type を unknown にし、
+  推測は description に留め、confidence を下げてください。JSON のみ返答してください。
+vlm_user_prompt_template: |
+  設置: {location_description}
+  軽量検知のサマリ: {detector_summary}
+  利用者ルール: {custom_rules}
+  この1フレーム状況を、指定スキーマのJSONで答えてください。
+notification:
+  interest_classes:
+    - person
+  min_confidence: 0.4
+  dwell_alert_seconds: 180
+recording_retention_days: 7
+snapshot_retention_days: 30

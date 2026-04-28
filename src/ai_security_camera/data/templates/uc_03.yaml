@@ -1,0 +1,18 @@
+id: uc_03
+name: 室内見守り
+location_description: リビングや寝室。高齢者の転倒、子供の異常静止などに関心がある。
+detector_classes:
+  - person
+vlm_system_prompt: |
+  室内見守り。プライバシーに配慮し、個人特定はしない。転倒・異常静止の可能性を severity で表現。JSON のみ。
+vlm_user_prompt_template: |
+  室内: {location_description}
+  検知サマリ: {detector_summary}
+  利用者ルール: {custom_rules}
+  標準スキーマのJSONのみ出力。
+notification:
+  interest_classes:
+    - person
+  min_confidence: 0.5
+recording_retention_days: 7
+snapshot_retention_days: 30
